@@ -91,16 +91,15 @@ SHIPS = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
 LIFE = sum(SHIPS)
 ALPHABET = ['а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'к']
 
-KILLED_WORDS = ['убила', 'убил', 'потопила', 'потоплен', 'потопил']
+KILLED_WORDS = ['убила', 'убил', 'потопила', 'потоплен', 'потопил', 'убит']
 INJURED_WORDS = ['попала', 'попал', 'попадание', 'ранил', 'ранила', 'ранен']
 MISSED_WORDS = ['мимо', 'промах', 'промазала', 'промазал']
-CANCEL_WORD = ['отмена', 'отменить', 'отменитьход', 'назад']
 ENDING_WORDS = ['новаяигра', 'выход', 'начатьновуюигру', 'начать']
 HELP_WORDS = ['помощь', 'помоги']
 WHAT_CAN_U_DO_WORDS = ['чтотыумеешь', 'чтотыможешь', 'чтотыумеешь?']
 
 
-ALL_WORDS = KILLED_WORDS+INJURED_WORDS+MISSED_WORDS+CANCEL_WORD+ENDING_WORDS+HELP_WORDS+WHAT_CAN_U_DO_WORDS
+ALL_WORDS = KILLED_WORDS+INJURED_WORDS+MISSED_WORDS+ENDING_WORDS+HELP_WORDS+WHAT_CAN_U_DO_WORDS
 
 PHRASES_FOR_ALICES_TURN = ['Пожалуйста, не жульничайте, я контролирую игру.', 'Помоему, сейчас не ваш ход.',
                            'Со мной такое не прокатит. Сейчас мой ход.', 'Может вы не будете меня обманывать?',
@@ -231,7 +230,7 @@ def handle_dialog(request, response, user_storage):
                     if result_of_fire == 'Мимо':
                         user_storage["users_turn"] = False
                         alice_answer = alice_fires(user_storage, "remember")
-                        response.set_text('Мимо. Я хожу. ' + alice_answer)
+                        response.set_text(choice(['Мимо. Я хожу. ', 'Вы промазали. Теперь моя очередь стрелять. ']) + alice_answer)
                     else:
                         user_storage["alice_life"] -= 1
                         if user_storage["alice_life"] < 1:
@@ -426,7 +425,7 @@ def alice_fires(user_data, happened):
 
         # Инкримент к жульничеству
         user_data["cheating_stage"] += 1
-        answer = 'Ваш ход.'
+        answer = choice(['Ваш ход.', 'Ходите.', 'Стреляйте.', 'Мне сегодня не везёт, ходите.'])
 
         # Замечания для жуликов
         if user_data["cheating_stage"] == 10:
@@ -450,7 +449,7 @@ def alice_fires(user_data, happened):
 # 1 - клетки кораблей, 2 - клетки, куда стреляли, 3 - подбитые клетки корабля
 def user_fires(matrix, coord):
     x, y = coord
-    output = 'Вы уже стреляли сюда'
+    output = choice(['Вы уже стреляли сюда', 'Вы записываете, куда стреляете? Сюда уже делали выстрел!'])
 
     if matrix[y][x] == 0:
         output = 'Мимо'
@@ -492,7 +491,7 @@ def user_fires(matrix, coord):
             if sinking:
                 for cell in was:  # Проходимся по клеткам корабля
                     matrix[cell[1]][cell[0]] = 2
-                output = 'Потоплен'
+                output = choice(['Потоплен', 'Убит', 'Эх, что-то везёт вам сегодня! Убит.'])
             else:
                 output = 'Ранен'
 
