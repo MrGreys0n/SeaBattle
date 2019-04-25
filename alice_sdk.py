@@ -39,7 +39,6 @@ class AliceResponse(object):
             }
         }
 
-
     def dumps(self):
         return json.dumps(
             self._response_dict,
