@@ -39,6 +39,7 @@ class AliceResponse(object):
             }
         }
 
+
     def dumps(self):
         return json.dumps(
             self._response_dict,
@@ -47,6 +48,8 @@ class AliceResponse(object):
         )
 
     def set_text(self, text):
+        if text is None:
+            text =  'Повторите ещё раз, пожалуйста'
         self._response_dict['response']['text'] = text
 
     def set_buttons(self, buttons):
