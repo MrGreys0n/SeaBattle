@@ -97,7 +97,7 @@ MISSED_WORDS = ['мимо', 'промах', 'промазала', 'промаз�
 ENDING_WORDS = ['новаяигра', 'выход', 'начатьновуюигру', 'начать']
 HELP_WORDS = ['помощь', 'помоги']
 WHAT_CAN_U_DO_WORDS = ['чтотыумеешь', 'чтотыможешь', 'чтотыумеешь?']
-SHOW_WORD = ['показатьполе']
+SHOW_WORD = ['показатьполе', 'покажиполе', 'поле']
 
 
 ALL_WORDS = KILLED_WORDS+INJURED_WORDS+MISSED_WORDS+ENDING_WORDS+HELP_WORDS+WHAT_CAN_U_DO_WORDS+SHOW_WORD
@@ -169,7 +169,7 @@ def handle_dialog(request, response, user_storage):
             if user_message in ENDING_WORDS:
                 user_storage = end(request, response)
 # одинаково показаны потопленные корабли и прострелянные клетки, в будущем надо исправить
-            if user_message == 'показатьполе':
+            if user_message in SHOW_WORD:
                 str_num = 1
                 resp = '  '+' '.join([s.upper() for s in ALPHABET]) + '\n'
                 for row in user_storage["alices_matrix"]:
@@ -274,7 +274,7 @@ def handle_dialog(request, response, user_storage):
 
         # Если ничему не соответствует
         else:
-            response.set_text(choice(["Простите, но я вас не поняла.", 'Изините, я вас не поняла. Скажите ещё раз, пожалуйста.']))
+            response.set_text(choice(["Простите, но я вас не поняла.", 'Извините, я вас не поняла. Скажите ещё раз, пожалуйста.']))
 
     # Выходы из рекурсии
     except NoCellsError:
